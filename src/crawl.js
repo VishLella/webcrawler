@@ -20,20 +20,22 @@ function getURLsFromHTML(htmlBody, baseURL) {
     const hrefs = dom.window.document.querySelectorAll('a')
     const links = []
     hrefs.forEach((link) => {
-        if (link.href[0] === '/') {
-            let tempLink = baseURL + link.href
-            try {
-                links.push(new URL(tempLink))
-            } catch (err) {
-                //throw new Error(`Invalid href: ${err}`)
-                console.log(`Invalid href: ${link.href}`)
-            }
-        } else {
-            try {
-                links.push(new URL(link.href))
-            } catch (err) {
-                //throw Error(`Invalid href: ${err}`)
-                console.log(`Invalid href: ${link.href}`)
+        if (link.hasAttribute('href')) {
+            if (link.href[0] === '/') {
+                let tempLink = baseURL + link.href
+                try {
+                    links.push(new URL(tempLink))
+                } catch (err) {
+                    //throw new Error(`Invalid href: ${err}`)
+                    console.log(`Invalid href: ${link.href}`)
+                }
+            } else {
+                try {
+                    links.push(new URL(link.href))
+                } catch (err) {
+                    //throw Error(`Invalid href: ${err}`)
+                    console.log(`Invalid href: ${link.href}`)
+                }
             }
         }
     })
