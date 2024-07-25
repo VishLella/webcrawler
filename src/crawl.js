@@ -1,3 +1,4 @@
+import { JSDOM } from 'jsdom'
 const normalizeURL = (url) => {
 
     const link = new URL(url)
@@ -12,4 +13,16 @@ const normalizeURL = (url) => {
 
 }
 
-export { normalizeURL };
+function getURLsFromHTML(htmlBody, baseURL) {
+    const dom = new JSDOM(htmlBody, {
+        contentType: "text/html"
+    })
+    const hrefs = dom.window.document.querySelectorAll('a')
+    const links = []
+    hrefs.forEach((link) => {
+        links.push(link.href)
+    })
+    return links
+}
+
+export { normalizeURL, getURLsFromHTML };
