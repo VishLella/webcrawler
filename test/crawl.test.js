@@ -14,3 +14,11 @@ test('Checks if URLs are properly normalized', () => {
     })
 
 })
+
+test('Checks if relative urls are converted into absolute URLs', () => {
+
+})
+
+test('Checks if all anchor elements are found in a body of html', () => {
+
+})
