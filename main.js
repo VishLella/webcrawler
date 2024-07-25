@@ -1,4 +1,4 @@
-import { normalizeURL, getURLsFromHTML } from "./src/crawl.js";
+//import { normalizeURL, getURLsFromHTML, crawlPage } from "./src/crawl.js";
 import { argv, exit } from 'process'
 
 // const link = normalizeURL('https://BLOG.boot.dev/path')
@@ -11,8 +11,9 @@ import { argv, exit } from 'process'
 
 
 // console.log(href)
+import { normalizeURL, getURLsFromHTML, crawlPage } from "./src/crawl.js";
 
-function main() {
+async function main() {
     const args = process.argv.length
     if (args < 3) {
         console.log('Need a base url')
@@ -21,8 +22,12 @@ function main() {
         console.log('Only one base url argument allowed')
         process.exit(1)
     }
-    console.log(`Base Url: ${process.argv[2]}`)
+    const baseUrl = process.argv[2]
+    console.log(`Base Url: ${baseUrl}`)
     console.log('Starting crawl...\n')
+
+    const result = await crawlPage(baseUrl)
+    //console.log(result)
 }
 
 main()

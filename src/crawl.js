@@ -42,4 +42,31 @@ function getURLsFromHTML(htmlBody, baseURL) {
     return links
 }
 
-export { normalizeURL, getURLsFromHTML };
+async function crawlPage(currentURL) {
+
+    let response
+    try {
+        response = await fetch(currentURL)
+    } catch (err) {
+        throw new Error(`Got Network error: ${err.message}`)
+    }
+
+    if (!response.ok) {
+        console.log(`Invalid code: ${response.status}`)
+        return
+    }
+
+    if (!response.headers.get('Content-Type').includes('text/html')) {
+        //throw Error(`Invalid type: ${response.contentType}`)
+        console.log(`Invalid type: ${response.contentType}`)
+        return
+    }
+
+    const text = await response.text()
+    console.log(text)
+    //return response.text()
+
+
+}
+
+export { normalizeURL, getURLsFromHTML, crawlPage };
