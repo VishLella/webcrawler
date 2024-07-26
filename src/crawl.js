@@ -42,11 +42,31 @@ function getURLsFromHTML(htmlBody, baseURL) {
     return links
 }
 
-async function crawlPage(currentURL) {
+async function crawlPage(baseURL, currentURL, pages) {
+    if (normalizeURL(baseURL) !== normalizeURL(currentURL)) {
+        return pages
+    }
+    const currentNorm = normalizeURL(currentURL)
+    if (currentNorm in pages) {
+        pages[currentNorm]++
+    } else {
+        pages[currentNorm] = 1
+    }
+    const html = await parseHTML(currentURL)
+    const links = getURLsFromHTML(html, currentURL)
+    links.forEach((link) => {
+        const tempDict = crawlPage(baseURL, link, pages)
+        pages = { ...pages, ...tempDict }
+    })
+
+    return pages
+}
+
+const parseHTML = async (URL) => {
 
     let response
     try {
-        response = await fetch(currentURL)
+        response = await fetch(URL)
     } catch (err) {
         throw new Error(`Got Network error: ${err.message}`)
     }
@@ -62,10 +82,9 @@ async function crawlPage(currentURL) {
         return
     }
 
-    const text = await response.text()
-    console.log(text)
-    //return response.text()
-
+    // const text = await response.text()
+    //console.log(text)
+    return response.text()
 
 }
 
