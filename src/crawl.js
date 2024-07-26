@@ -21,7 +21,7 @@ function getURLsFromHTML(htmlBody, baseURL) {
     const links = []
     hrefs.forEach((link) => {
         if (link.hasAttribute('href')) {
-            if (link.href[0] === '/') {
+            if (link.href[0] === '/' && link.href.length > 1) {
                 let tempLink = baseURL + link.href
                 try {
                     links.push(new URL(tempLink))
@@ -43,21 +43,37 @@ function getURLsFromHTML(htmlBody, baseURL) {
 }
 
 async function crawlPage(baseURL, currentURL, pages) {
-    if (normalizeURL(baseURL) !== normalizeURL(currentURL)) {
+    const base = new URL(baseURL)
+    const cur = new URL(currentURL)
+    if (base.hostname !== cur.hostname) {
         return pages
     }
     const currentNorm = normalizeURL(currentURL)
+    //console.log(currentNorm)
     if (currentNorm in pages) {
         pages[currentNorm]++
+        return pages
     } else {
         pages[currentNorm] = 1
     }
-    const html = await parseHTML(currentURL)
+
+    console.log(`Crawling ${currentURL}`)
+    let html = ''
+    try {
+        html = await parseHTML(currentURL)
+    } catch (err) {
+        console.log(`${err.message}`)
+    }
     const links = getURLsFromHTML(html, currentURL)
-    links.forEach((link) => {
-        const tempDict = crawlPage(baseURL, link, pages)
-        pages = { ...pages, ...tempDict }
-    })
+    for (const link of links) {
+        pages = await crawlPage(baseURL, link, pages)
+    }
+    // links.forEach((link) => {
+    //     pages = await crawlPage(baseURL, link, pages)
+    //     //const tempDict = crawlPage(baseURL, link, pages)
+    //     //pages = mergeDicts(pages, tempDict)
+    //     //pages = { ...pages, ...tempDict }
+    // })
 
     return pages
 }
@@ -69,23 +85,45 @@ const parseHTML = async (URL) => {
         response = await fetch(URL)
     } catch (err) {
         throw new Error(`Got Network error: ${err.message}`)
+        //console.log(`Got Network error: ${err.message}`)
+        //return
     }
 
     if (!response.ok) {
-        console.log(`Invalid code: ${response.status}`)
-        return
+        throw new Error(`Invalid code: ${response.status}`)
+        //console.log(`Invalid code: ${response.status}`)
+        //return
     }
 
     if (!response.headers.get('Content-Type').includes('text/html')) {
-        //throw Error(`Invalid type: ${response.contentType}`)
-        console.log(`Invalid type: ${response.contentType}`)
-        return
+        throw Error(`Invalid type: ${response.contentType}`)
+        //console.log(`Invalid type: ${response.contentType}`)
+        //return
     }
 
     // const text = await response.text()
     //console.log(text)
     return response.text()
 
+}
+
+function mergeDicts(dict1, dict2) {
+    const finalDict = {}
+    for (const [key, value] of Object.entries(dict1)) {
+        if (key in finalDict) {
+            finalDict[key] = value
+        } else {
+            finalDict[key] += value
+        }
+    }
+    for (const [key, value] of Object.entries(dict2)) {
+        if (key in finalDict) {
+            finalDict[key] = value
+        } else {
+            finalDict[key] += value
+        }
+    }
+    return finalDict
 }
 
 export { normalizeURL, getURLsFromHTML, crawlPage };

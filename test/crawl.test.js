@@ -7,7 +7,7 @@ test('Checks if URLs are properly normalized', () => {
         'https://blog.boot.dev/path/',
         'https://blog.boot.dev/path',
         'http://blog.boot.dev/path/',
-        'http://BLOG.boot.dev/path'
+        'http://BLOG.boot.dev/path',
     ]
     links.forEach((link) => {
         expect(normalizeURL(link)).toEqual('blog.boot.dev/path')
