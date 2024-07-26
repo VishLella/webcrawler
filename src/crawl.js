@@ -29,6 +29,13 @@ function getURLsFromHTML(htmlBody, baseURL) {
                     //throw new Error(`Invalid href: ${err}`)
                     console.log(`Invalid href: ${link.href}`)
                 }
+            } else if (link.href[0] === '/') { //go back to root
+                try {
+                    links.push(new URL(baseURL))
+                } catch (err) {
+                    //throw new Error(`Invalid href: ${err}`)
+                    console.log(`Invalid href: ${link.href}`)
+                }
             } else {
                 try {
                     links.push(new URL(link.href))
@@ -64,7 +71,7 @@ async function crawlPage(baseURL, currentURL, pages) {
     } catch (err) {
         console.log(`${err.message}`)
     }
-    const links = getURLsFromHTML(html, currentURL)
+    const links = getURLsFromHTML(html, baseURL)
     for (const link of links) {
         pages = await crawlPage(baseURL, link, pages)
     }
