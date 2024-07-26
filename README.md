@@ -25,10 +25,10 @@ Project Root
 │   ├── crawl.test.js
 ├── .gitignore 
 ├── .nvmrc                     # Config file if you're using nvm (Not Needed as long as you run latest node)
+├── README.md                  # README file
 ├── main.js                    # Main script
 ├── package-lock.json
-├── package.json               # node config file 
-└── README.md                  # README file
+└──  package.json               # node config file 
 ```
 
 ## Setup and Usage
