@@ -12,7 +12,7 @@ import { argv, exit } from 'process'
 
 // console.log(href)
 import { normalizeURL, getURLsFromHTML, crawlPage } from "./src/crawl.js";
-import { link } from 'fs';
+import { printReport } from './src/report.js';
 
 async function main() {
     const args = process.argv.length
@@ -28,7 +28,10 @@ async function main() {
     console.log('Starting crawl...\n')
 
     const result = await crawlPage(baseUrl, baseUrl, {})
-    console.log(result)
+
+    printReport(result)
+
+
     //     //console.log(result)
     //     const links = getURLsFromHTML(result, baseUrl)
     //     links.forEach((link) => {
