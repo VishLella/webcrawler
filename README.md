@@ -14,6 +14,7 @@ This project is a javascript CLI WebCrawler built on the node runtime. The progr
 - **HTTP Requests**: Uses HTTP requests to fetch HTML data from multiple links.
 - **HTML Parsing**: Parses HTML data to recieve all hrefs from a webpage.
 - **Recursive Web Crawling**: Recursively crawls links from every webpage to thoroughly crawl a domain.
+- **Organized Reports**: Organized report with data of greatest to least internal links found.
 
 ## Directory Structure
 
@@ -21,8 +22,9 @@ This project is a javascript CLI WebCrawler built on the node runtime. The progr
 Project Root
 ├── src                        # Source files for the project
 │   ├── crawl.js               # Contains the main logic of the program
+│   └── report.js             
 ├── test                       # Directory with test cases
-│   ├── crawl.test.js
+│   └── crawl.test.js
 ├── .gitignore 
 ├── .nvmrc                     # Config file if you're using nvm (Not Needed as long as you run latest node)
 ├── README.md                  # README file
